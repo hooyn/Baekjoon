@@ -1,2 +1,2 @@
 <h2> Baekjoon Daily Strick. </h2>
-<div href="https://solved.ac/profile/hooyn_industry"> solved.ac Link </div>
+<div> solved.ac Link : "https://solved.ac/profile/hooyn_industry" </div>
