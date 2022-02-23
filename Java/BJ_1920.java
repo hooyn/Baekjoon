@@ -62,6 +62,5 @@ public class BJ_1920 {
         } else {
             System.out.println(0);
         }
-        
     }
 }
