@@ -44,3 +44,7 @@ public class BJ_2579 {
         return score[n];
     }
 }
+
+/**
+ * 코드 참조 : https://st-lab.tistory.com/132
+ */
