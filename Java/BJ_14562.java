@@ -22,7 +22,6 @@ public class BJ_14562 {
 
         }
     }
-
     private static int find(int s, int t, int cnt) {
         if(s>t){ //s가 t보다 크다면 잘못된 경우이다
             return 1000;
