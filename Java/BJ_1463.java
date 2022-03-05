@@ -6,41 +6,24 @@ import java.io.InputStreamReader;
  * 1로 만들기
  */
 public class BJ_1463 {
+
+    static int[] dp;
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int n = Integer.parseInt(br.readLine());
 
-        int result = find(n, 0);
-        System.out.println(result);
-    }
+        dp = new int[n + 1];
+        dp[0] = dp[1] = 0;
 
-    public static int find(int n, int cnt){
-        if(n<0) return 1000000;
-        if(n==1) return cnt;
+        for (int i = 2; i <= n; i++) {
 
-        boolean a = false;
-        boolean b = false;
-
-        if(n%3==0){
-            a = true;
-        } else if(n%2==0){
-            b = true;
+            //반복문을 사용해서 경우의 수를 N개만 고려한다.
+            dp[i] = dp[i-1] + 1;
+            if(i%2==0) dp[i] = Math.min(dp[i], dp[i/2] + 1);
+            if(i%3==0) dp[i] = Math.min(dp[i], dp[i/3] + 1);
+            //dp를 반복문을 돌면서 제일 작은 수를 고려한다.
         }
-
-        int aa = 1000001;
-        int bb = 1000001;
-        int cc = find(n-1, cnt+1);
-        if(a){
-            aa = find(n/3, cnt+1);
-        }
-        if(b){
-            bb = find(n/2, cnt+1);
-        }
-
-        int min = cc;
-        if(bb<min) min = bb;
-        if(aa<min) min = aa;
-
-        return min;
+        System.out.println(dp[n]);
     }
 }
