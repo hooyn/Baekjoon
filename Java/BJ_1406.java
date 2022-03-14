@@ -26,11 +26,11 @@ public class BJ_1406 {
             if(com=='P'){ //만약 명령어가 P일 때만 what을 받아서 저장한다.
                 char what = command.charAt(2);
                 if(input_size!=cursor){
-                    for (int j = input_size; j > cursor; j--) {
-                        editor[j] = editor[j-1];
+                    for (int j = input_size; j > cursor; j--) { 
+                        editor[j] = editor[j-1]; //cursor부터 배열을 옆으로 밀고
                     }
                 }
-                editor[cursor] = what;
+                editor[cursor] = what; //cursor에 배열 넣기
                 cursor++;
                 input_size++;
 
