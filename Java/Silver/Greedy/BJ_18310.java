@@ -21,6 +21,6 @@ public class BJ_18310 {
 
         Arrays.sort(house_location);
 
-        System.out.println(house_location[house_count/2-1]);
+        System.out.println(house_location[(house_count-1)/2]);
     }
 }
