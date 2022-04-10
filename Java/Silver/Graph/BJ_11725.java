@@ -1,8 +1,8 @@
-package jpabook.baekjoon.baek0410;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 import java.util.StringTokenizer;
 
@@ -11,15 +11,20 @@ import java.util.StringTokenizer;
  */
 public class BJ_11725 {
     static int n;
-    static int[][] vertex;
+    static List<Integer>[] list;
     static boolean[] visited;
     static int[] arr;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         n = Integer.parseInt(br.readLine());
 
-        vertex = new int[n+1][n+1];
         visited = new boolean[n+1];
+
+        list = new ArrayList[n+1];
+        for (int i = 1; i <= n; i++) {
+            list[i] = new ArrayList<>();
+        } //List배열 초기화
+
         arr = new int[n+1];
 
         for (int i = 1; i < n; i++) {
@@ -27,8 +32,8 @@ public class BJ_11725 {
             int x = Integer.parseInt(st.nextToken());
             int y = Integer.parseInt(st.nextToken());
 
-            vertex[x][y] = 1;
-            vertex[y][x] = 1;
+            list[x].add(y);
+            list[y].add(x);
         }
 
         find(1);
@@ -40,12 +45,15 @@ public class BJ_11725 {
 
     private static void find(int root) {
         Stack<Integer> stack = new Stack<>();
-        for (int i = 1; i < vertex.length; i++) {
-            if(vertex[root][i]==1&&!visited[i]){
-                visited[i] = true;
-                arr[i] = root;
-                stack.add(i);
+        for (int i = 0; i < list[root].size(); i++) {
+            Integer child = list[root].get(i);
+
+            if(!visited[child]){
+                arr[child] = root;
+                visited[child] = true;
+                stack.add(child);
             }
+
         }
 
         while (!stack.isEmpty()){
