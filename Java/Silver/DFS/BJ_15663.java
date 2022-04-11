@@ -1,9 +1,8 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.LinkedHashSet;
 import java.util.StringTokenizer;
 
 /**
@@ -15,7 +14,7 @@ public class BJ_15663 {
     static int[] arr;
     static int[] store;
     static boolean[] visited;
-    static List<String> list = new ArrayList<>();
+    static LinkedHashSet<String> list = new LinkedHashSet<>(); //값의 중복을 허용하지 않는 LinkedHashSet 사용
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
@@ -47,9 +46,7 @@ public class BJ_15663 {
             for (int val : store) {
                 str += val + " ";
             }
-            if(!list.contains(str)){
-                list.add(str);
-            }
+            list.add(str); //기존의 list.contains()로직 제거
             return;
         }
 
