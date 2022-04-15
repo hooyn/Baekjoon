@@ -9,12 +9,13 @@ import java.util.StringTokenizer;
  */
 public class BJ_1932 {
     static int n;
-    static Integer[][] arr;
-    static int max = 0;
+    static int[][] arr;
+    static Integer[][] dp;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         n = Integer.parseInt(br.readLine());
-        arr = new Integer[n][n];
+        arr = new int[n][n];
+        dp = new Integer[n][n];
 
         for (int i = 0; i < n; i++) {
             StringTokenizer st = new StringTokenizer(br.readLine());
@@ -23,20 +24,22 @@ public class BJ_1932 {
             }
         }
 
-        find(0,0, 0);
-
-        System.out.println(max);
-    }
-
-    private static void find(int row, int col, int count) {
-        count += arr[row][col];
-
-        if(row==n-1){
-            max = Math.max(max, count);
-            return;
+        for (int i = 0; i < n; i++) {
+            dp[n-1][i] = arr[n-1][i];
         }
 
-        find(row+1, col, count);
-        find(row+1, col+1, count);
+        System.out.println(find(0,0));
+    }
+
+    private static int find(int row, int col) {
+        if(row==n-1){
+            return dp[row][col];
+        }
+
+        if(dp[row][col] == null){
+            dp[row][col] = Math.max(find(row+1, col), find(row+1, col+1)) + arr[row][col];
+        }
+
+        return dp[row][col];
     }
 }
