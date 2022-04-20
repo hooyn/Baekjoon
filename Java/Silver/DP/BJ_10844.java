@@ -41,6 +41,7 @@ public class BJ_10844 {
                 dp[digit][val] = find(digit-1, val-1) + find(digit-1, val+1);
             }
         }
+        
         return dp[digit][val] % 1000000000;
     }
 }
