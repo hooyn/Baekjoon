@@ -22,7 +22,6 @@ public class BJ_10844 {
             result += find(n, i);
         }
 
-        for (Long[] longs : dp) {
         System.out.println(result % 1000000000);
     }
 
