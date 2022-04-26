@@ -7,36 +7,38 @@ import java.util.StringTokenizer;
  * 스티커
  */
 public class BJ_9465 {
-    static int[][] arr;
-    static int[][] dp;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int n = Integer.parseInt(br.readLine());
+        int testcase = Integer.parseInt(br.readLine());
 
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < testcase; i++) {
+            int n = Integer.parseInt(br.readLine());
 
-            int m = Integer.parseInt(br.readLine());
-            arr = new int[2][m+1];
-            dp = new int[2][m+1];
-
-            StringTokenizer st;
-
+            int[][] arr = new int[n+1][2];
             for (int j = 0; j < 2; j++) {
-                st = new StringTokenizer(br.readLine());
-                for (int k = 1; k <= m; k++) {
-                    arr[j][k] = Integer.parseInt(st.nextToken());
+                StringTokenizer st = new StringTokenizer(br.readLine());
+                for (int k = 1; k <= n; k++) {
+                    arr[k][j] = Integer.parseInt(st.nextToken());
                 }
             }
 
+            int[][] dp = new int[n+1][2];
+            dp[0][0] = arr[0][0];
             dp[0][1] = arr[0][1];
+
+            dp[1][0] = arr[1][0];
             dp[1][1] = arr[1][1];
 
-            for (int j = 2; j <= m; j++) {
-                dp[0][j] = Math.max(dp[1][j-1], dp[1][j-2]) + arr[0][j];
-                dp[1][j] = Math.max(dp[0][j-1], dp[0][j-2]) + arr[1][j];
-            }
+            if(n<2){ //n==1 이면 그냥 둘중에 높은 카드 점수 출력
+                System.out.println(Math.max(dp[1][0], dp[1][1]));
+            } else {
+                for (int j = 2; j <= n; j++) {
+                    dp[j][0] = Math.max(dp[j-1][1], dp[j-2][1]) + arr[j][0];
+                    dp[j][1] = Math.max(dp[j-1][0], dp[j-2][0]) + arr[j][1];
+                }
 
-            System.out.println(Math.max(dp[0][m], dp[1][m]));
+                System.out.println(Math.max(dp[n][0], dp[n][1]));
+            }
         }
     }
 }
