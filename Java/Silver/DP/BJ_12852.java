@@ -3,46 +3,40 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 /**
- * 1로 만들기 2 (스폐셜 저지)
+ * 1로 만들기 2
  */
 public class BJ_12852 {
-    static int n;
-    static int count = Integer.MAX_VALUE;
-    static String result = "";
     public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        n = Integer.parseInt(br.readLine());
+         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+         int n = Integer.parseInt(br.readLine());
 
-        find(n, 0, "");
+         int[] dp = new int[n+1];
+         int[] trace = new int[n+1];
 
-        System.out.println(count);
-        System.out.println(result);
-    }
+         dp[1] = 0;
+         trace[1] = -1;
 
-    private static void find(int num, int co, String str) {
-        if(num<=0) return;
+        for (int i = 2; i <= n; i++) {
+            dp[i] = dp[i-1]+1;
+            trace[i] = i-1;
 
-        if(num==1){
-            if(count>co){
-                str += num;
-                count = co;
-                result = str;
-                return;
+            if(i%2==0 && dp[i]>dp[i/2]+1){
+                dp[i] = dp[i/2]+1;
+                trace[i] = i/2;
+            }
+            if(i%3==0 && dp[i]>dp[i/3]+1){
+                dp[i] = dp[i/3]+1;
+                trace[i] = i/3;
             }
         }
 
-        if(num%3==0){
-            String temp = str;
-            find(num/3, co+1, str+=num+" ");
-            str = temp;
+        int num = dp[n];
+        System.out.println(num);
+
+        int idx = n;
+        for (int i = 0; i <= num; i++) {
+            System.out.print(idx + " ");
+            idx = trace[idx];
         }
-        if(num%2==0){
-            String temp = str;
-            find(num/2, co+1, str+=num+" ");
-            str = temp;
-        }
-        String temp = str;
-        find(num-1, co+1,  str+=num+" ");
-        str = temp;
     }
 }
