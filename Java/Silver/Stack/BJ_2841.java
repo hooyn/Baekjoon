@@ -18,8 +18,8 @@ public class BJ_2841 {
         N = Integer.parseInt(st.nextToken());
         P = Integer.parseInt(st.nextToken());
 
-        int[] idx = new int[7];
-        arr = new int[7][N];
+        int[] idx = new int[7]; //각 줄의 값이 있는 인덱스를 저장하기 위한 배열
+        arr = new int[7][N]; //각 줄의 누르고 있는 플랫을 배열로 저장
 
         for (int i = 0; i < N; i++) {
             st = new StringTokenizer(br.readLine());
