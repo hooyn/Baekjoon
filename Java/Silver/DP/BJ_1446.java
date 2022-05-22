@@ -1,17 +1,31 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.StringTokenizer;
+import java.util.*;
 
 /**
  * 지름길
  */
-public class BJ_1446 {
+public class BJ_1446_dijkstra {
+    static class Road{
+        int start, end, len;
+
+        public Road(int start, int end, int len) {
+            this.start = start;
+            this.end = end;
+            this.len = len;
+        }
+
+        @Override
+        public String toString() {
+            return "Road{" +
+                    "start=" + start +
+                    ", end=" + end +
+                    ", len=" + len +
+                    '}';
+        }
+    }
     static int pi(String s){return Integer.parseInt(s);}
-    static int[] dp;
-    static int[][] arr;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
@@ -19,58 +33,58 @@ public class BJ_1446 {
         int n = pi(st.nextToken());
         int d = pi(st.nextToken());
 
-        arr = new int[n][3];
-        dp = new int[d+1];
-        for (int i = 0; i <= d; i++) {
-            dp[i] = i;
-        }
+        List<Road> list = new ArrayList<>();
 
-        for (int i = 0; i < n; i++) {
+        while(n-->0){
             st = new StringTokenizer(br.readLine());
 
-            arr[i][0] = pi(st.nextToken());
-            arr[i][1] = pi(st.nextToken());
-            arr[i][2] = pi(st.nextToken());
+            int s = pi(st.nextToken());
+            int e = pi(st.nextToken());
+            int l = pi(st.nextToken());
+
+            if(e>d) continue;
+            if(e - s <= l) continue;
+            list.add(new Road(s, e, l));
         }
 
-        Arrays.sort(arr, new Comparator<int[]>() { //배열 값 내림차순으로 정렬
+        Collections.sort(list, new Comparator<Road>() {
             @Override
-            public int compare(int[] o1, int[] o2) {
-                if(o1[0]==o2[0]){
-                    return o1[1] - o1[1];
+            public int compare(Road o1, Road o2) {
+                if(o1.start==o2.start) {
+                    return o1.end - o2.end;
                 }
-
-                return o1[0] - o2[0];
+                else{
+                    return o1.start-o2.start;
+                }
             }
         });
 
-        for (int[] ints : arr) {
-            System.out.print(ints[0] + " ");
-            System.out.print(ints[1] + " ");
-            System.out.print(ints[2] + " ");
-            System.out.println();
+        for (Road road : list) {
+            System.out.println(road);
         }
 
-        for (int i = 0; i < n; i++) {
-            int start = arr[i][0];
-            int end = arr[i][1];
-            int len = arr[i][2];
+        int idx = 0, move = 0;
+        int[] dist = new int[10001];
+        Arrays.fill(dist, 10001); //배열 값 전체 10001(최대값)로 채우기
+        dist[0] = 0;
 
-            if(end>d){ //만약 고속도로 거리를 넘어가면 continue;
-                continue;
-            } else if((end-start)<=len ){ //실제 고속도로 길이보다 크면 continue;
-                continue;
-            } else {
-                if(dp[end]>dp[start]+len){ //비교를 해서 값이 작으면
-                    int x = dp[start]+len;
-                    for (int j = end; j <= d; j++) {
-                        dp[j] = x;
-                        x++;
-                    }
+        while(move<d){
+            if(idx < list.size()){ //list에 들어가 있는 값이 없다면
+                Road road = list.get(idx); //저장한 값중 하나 빼고
+                if(move == road.start){ //만약 현재 위치가 지름길의 시작위치이면
+                    dist[road.end] = Math.min(dist[move] + road.len, dist[road.end]); //더 빨리 갈 수 있다면
+                    idx++; //list 다음 값으로 이동
+                } else {
+                    dist[move+1] = Math.min(dist[move+1], dist[move] + 1);
+                    move++;
                 }
+            } else {
+                dist[move+1] = Math.min(dist[move+1], dist[move] + 1);
+                move++;
             }
         }
-
-        System.out.println(dp[d]);
+        System.out.println(dist[d]);
     }
 }
+
+//참고: https://coder-in-war.tistory.com/entry/BOJ-JAVA1446-%EC%A7%80%EB%A6%84%EA%B8%B8
