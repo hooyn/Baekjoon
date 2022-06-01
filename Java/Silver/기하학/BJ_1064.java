@@ -1,7 +1,5 @@
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.StringTokenizer;
+import java.util.Scanner;
 
 /**
  * 평행사변형
@@ -17,19 +15,15 @@ public class BJ_1064 {
         }
     }
     public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        Scanner sc =new Scanner(System.in);
 
         Pair[] arr = new Pair[3]; //좌표 저장
         double min = Double.MAX_VALUE;
         double max = Double.MIN_VALUE;
         double[] leng = new double[3];
 
-        for (int i = 0; i < 3; i++) {
-            StringTokenizer st = new StringTokenizer(br.readLine());
-            int n = Integer.parseInt(st.nextToken());
-            int m = Integer.parseInt(st.nextToken());
-
-            arr[i] = new Pair(n, m);
+        for(int i=0; i<3; i++){
+            arr[i] = new Pair(sc.nextInt(), sc.nextInt());
         }
 
         //세 점이 한 직선 위에 있으면 평행사변형을 만들 수 없습니다.
