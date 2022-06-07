@@ -3,7 +3,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 /**
- * LCS
+ * LCS Longest Common Subsequence
  */
 public class BJ_9251_topDown {
     static char[] firstStr;
