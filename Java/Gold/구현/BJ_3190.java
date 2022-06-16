@@ -1,109 +1,92 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+import java.util.StringTokenizer;
 
-/**
- * 뱀
- */
 
 public class BJ_3190 {
-    static class Pair{
-        int second;
-        String dir;
 
-        public Pair(int second, String dir) {
-            this.second = second;
-            this.dir = dir;
+    static class pair{
+        int x;
+        int y;
+
+        pair(int x, int y){
+            this.x = x;
+            this.y = y;
         }
     }
-    static int n;
-    static int[][] arr;
-    static Queue<Pair> queue = new LinkedList<>();
+    
+    static int N, K, L;
+    static int[][] map;
+    static List<pair> tDirs;
+    static Queue<pair> snake;
+    static int[] dx = {0, 1, 0, -1};
+    static int[] dy = {1, 0, -1, 0};
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        n = Integer.parseInt(br.readLine());
-        arr = new int[n][n];
+        StringTokenizer stringTokenizer;
 
-        int m = Integer.parseInt(br.readLine());
-        for (int i = 0; i < m; i++) {
-            StringTokenizer st = new StringTokenizer(br.readLine());
-            int r = Integer.parseInt(st.nextToken())-1;
-            int c = Integer.parseInt(st.nextToken())-1;
+        N = Integer.parseInt(br.readLine());
+        K = Integer.parseInt(br.readLine());
 
-            arr[r][c] = 1; //사과의 위치 1로 표시
+        map = new int[N][N];
+        tDirs = new ArrayList<>();
+        snake = new LinkedList<>();
+
+        for(int i = 0 ; i < K ; i++){
+            stringTokenizer = new StringTokenizer(br.readLine());
+            int x = Integer.parseInt(stringTokenizer.nextToken());
+            int y = Integer.parseInt(stringTokenizer.nextToken());
+
+            map[x-1][y-1] = 1;
         }
 
-        int l = Integer.parseInt(br.readLine());
-        for (int i = 0; i < l; i++) {
-            StringTokenizer st = new StringTokenizer(br.readLine());
-            int s = Integer.parseInt(st.nextToken());
-            String d = st.nextToken();
+        L = Integer.parseInt(br.readLine());
+        for(int i = 0; i < L; i++){
+            stringTokenizer = new StringTokenizer(br.readLine());
+            int t = Integer.parseInt(stringTokenizer.nextToken());
+            String d = stringTokenizer.nextToken();
+            int dir = d.equals("D") ? 1 : -1;
 
-            queue.add(new Pair(s, d)); //방향 변환 정보 저장
+            tDirs.add(new pair(t, dir));
         }
 
-        running();
-    }
+        map[0][0] = -1; // 뱀
+        int time = 0, turn = 0;
+        int curdir = 0;
+        pair head = new pair(0, 0);
+        snake.add(head);
 
-    private static void running() {
-        int[] dr = {0, 1, 0, -1}; //우, 하, 좌, 상 방향
-        int[] dc = {1, 0, -1, 0};
+        while(true){
+            time++;
 
-        List<int[]> snake = new ArrayList<>();
-        snake.add(new int[]{0,0}); //뱀의 위치 저장
-        int curR = 0;
-        int curC = 0;
+            int nx = head.x + dx[curdir];
+            int ny = head.y + dy[curdir];
 
-        int direction = 0; //오른쪽 부터 시작
-        int second = 0;
+            if(nx < 0 || N <= nx || ny < 0 || N <= ny || map[nx][ny] == -1) break;
 
-        Pair data = queue.poll();
-        int sec = data.second;
-        String chdir = data.dir;
-
-        while (true) {
-            second++; //1초
-
-            int nr = curR + dr[direction];
-            int nc = curC + dc[direction];
-
-            if(isCheck(snake, nr, nc)==false) break; //만약 뱀이 벽에 닿거나, 몸통에 닿는다면 게임 종료
-
-            if(arr[nr][nc] == 1){ //사과를 먹었을 때
-                snake.add(new int[]{nr, nc});
-            } else {
-                snake.add(new int[]{nr, nc});
-                snake.remove(0); //꼬리 제거
+            if(map[nx][ny] != 1){
+                pair tail = snake.poll();
+                map[tail.x][tail.y] = 0;
             }
 
-            curR = nr;
-            curC = nc;
+            head = new pair(nx, ny);
+            snake.add(head);
+            map[nx][ny] = -1;
 
-            if(second==sec && !queue.isEmpty()){ //방향 변환 정보에 초가 지나고 방향 전환하기
-                if(chdir.equals("D")){
-                    direction = (direction+1)%4;
-                } else if(chdir.equals("L")) {
-                    direction = (direction+3)%4;
-                }
-
-                data = queue.poll();
-                sec = data.second;
-                chdir = data.dir;
+            if(turn < L && tDirs.get(turn).x == time){
+                curdir = (curdir + tDirs.get(turn).y) % 4;
+                curdir = curdir == -1 ? 3 : curdir;
+                turn++;
             }
         }
 
-        System.out.println(second);
-    }
-
-    private static boolean isCheck(List<int[]> snake, int nr, int nc) {
-        if(nr<0 || nr==n || nc<0 || nc==n) return false;
-
-        for (int i = 0; i < snake.size(); i++) {
-            int[] s = snake.get(i);
-            if(s[0]== nr && s[1]== nc) return false;
-        }
-
-        return true;
+        System.out.println(time);
     }
 }
+
+//https://hyeyun.tistory.com/entry/%EB%B0%B1%EC%A4%80-BOJ-3190-%EB%B1%80-%EC%9E%90%EB%B0%94-JAVA
