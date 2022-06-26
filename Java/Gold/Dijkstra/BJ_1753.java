@@ -1,8 +1,6 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
 /**
@@ -10,73 +8,99 @@ import java.util.StringTokenizer;
  * 주어진 시작점에서 다른 모든 정점으로의 최단 경로 구하기
  */
 public class BJ_1753 {
-    static class Info{
-        int node;
+
+    static BufferedReader br;
+    static BufferedWriter bw;
+
+    static class Edge implements Comparable<Edge>{
+        int id;
         int cost;
 
-        public Info(int node, int cost) {
-            this.node = node;
+        public Edge(int node, int cost) {
+            this.id = node;
             this.cost = cost;
         }
+
+        @Override
+        public int compareTo(Edge o) {
+            return this.cost - o.cost; //오름차순
+        }
     }
-    static int V;
-    static int E;
+    static int V, E, K;
+    static int u, v, w;
+    static int[] dist;
+    static ArrayList[] adjList; //인접리스트
     static int pi(String s){return Integer.parseInt(s);}
-    static List<Info>[] list;
-    static Integer[] dp;
-    static boolean[] visited;
+
     public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        br = new BufferedReader(new InputStreamReader(System.in));
+        bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
         StringTokenizer st = new StringTokenizer(br.readLine());
 
         V = pi(st.nextToken());
         E = pi(st.nextToken());
+        K = pi(br.readLine());
 
-        visited = new boolean[V+1];
-        list = new List[V+1];
-        for (int i = 1; i < V+1; i++) {
-            list[i] = new ArrayList<Info>();
+        dist = new int[V + 1];
+        for (int i = 1; i < V + 1; i++) {
+            dist[i] = Integer.MAX_VALUE;
         }
 
-        int start = pi(br.readLine());
-        dp = new Integer[V+1];
-        visited[start] = true;
+        adjList = new ArrayList[V + 1];
+        for (int i = 1; i < V + 1; i++) {
+            adjList[i] = new ArrayList<Edge>();
+        }
 
-        for (int i = 0; i < E; i++) {
+        for (int i = 1; i < E + 1; i++) {
             st = new StringTokenizer(br.readLine());
 
-            int u = pi(st.nextToken());
-            int v = pi(st.nextToken());
-            int w = pi(st.nextToken());
+            u = pi(st.nextToken());
+            v = pi(st.nextToken());
+            w = pi(st.nextToken());
 
-            Info info = new Info(v, w);
-            list[u].add(info);
+            adjList[u].add(new Edge(v, w));
         }
 
-        bfs(start, 0);
+        dijkstra(K);
 
-        for (int i = 1; i < V+1; i++) {
-            if(dp[i]==null){
-                System.out.println("INF");
-            } else {
-                System.out.println(dp[i]);
+        StringBuilder sb = new StringBuilder();
+        for (int i=1; i<=V; i++) {
+            if (dist[i] == Integer.MAX_VALUE) {
+                sb.append("INF\n");
+            }
+            else {
+                sb.append(dist[i]+"\n");
             }
         }
+        bw.write(sb.toString());
+
+        bw.flush();
+        bw.close();
+        br.close();
     }
 
-    private static void bfs(int node, int cost) {
-        if(dp[node]==null){
-            dp[node] = cost;
-        } else {
-            dp[node] = Math.min(cost, dp[node]);
-        }
-        List<Info> infos = list[node];
-        for (Info info : infos) {
-            if(!visited[info.node]){
-                visited[info.node] = true;
-                bfs(info.node, cost+info.cost);
-                visited[info.node] = false;
+    private static void dijkstra(int start) {
+        PriorityQueue<Edge> pq = new PriorityQueue<Edge>();
+        dist[start] = 0;
+        pq.add(new Edge(start, 0));
+
+        while (!pq.isEmpty()) {
+            Edge now = pq.poll();
+
+            if(now.cost > dist[now.id]) continue;
+
+            int len = adjList[now.id].size();
+            for (int i = 0; i < len; i++) {
+                Edge next = (Edge) adjList[now.id].get(i);
+
+                if(dist[next.id] > now.cost + next.cost){
+                    dist[next.id] = now.cost + next.cost;
+                    pq.add(new Edge(next.id, dist[next.id]));
+                }
             }
         }
     }
 }
+
+//출처: https://subbak2.com/m/55
