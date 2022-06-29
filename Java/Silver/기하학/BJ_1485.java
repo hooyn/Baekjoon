@@ -8,7 +8,7 @@ import java.util.StringTokenizer;
 /**
  * 정사각형
  */
-public class BJ_1198 {
+public class BJ_1485 {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int testCase = Integer.parseInt(br.readLine());
