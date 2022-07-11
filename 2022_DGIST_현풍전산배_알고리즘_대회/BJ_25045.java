@@ -30,18 +30,16 @@ class BJ_25045 {
     for(int i = 0; i < m; i++){
       M[i] = Long.parseLong(st.nextToken());
     }
-    Arrays.sort(M, Collections.reverseOrder());
+    Arrays.sort(M);
  
     //만족도 - 비용을 해서 0보다 크면 Score sum에 더하기
-    //만족도는 내림차순으로 정렬하고
-    //비용은 오름차순으로 정렬하여
-    //물건과 회사 중 수가 적은만큼 비교하기
     long sum = 0;
     for(int i = 0; i < controller; i++){
       long score = N[i] - M[i];
-      if(score>0){
-        sum += score;
+      if(score<=0){
+        break; //정렬이 되어 있으므로 score가 0보다 작거나 같다면 이후에도 0보다 작을 것이기 때문에 break;
       }
+      sum += score;
     }
     
     System.out.println(sum);
