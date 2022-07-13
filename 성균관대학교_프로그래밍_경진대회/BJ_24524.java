@@ -1,44 +1,56 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.LinkedList;
+import java.util.Queue;
 
 /**
  * 아름다운 문자열 골드 5
  */
 public class BJ_24524 {
-    static String S;
-    static String T;
-    static int result = 0;
-    static boolean[] visited;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        S = br.readLine();
-        T = br.readLine();
+        String S = br.readLine();
+        String T = br.readLine();
+        int result = 0;
 
-        // S의 문자열을 중복으로 사용하면 안되므로 체크하기 위한 boolean배열 선언
-        visited = new boolean[S.length()];
+        //큐 배열 선언과 초기화
+        Queue<Integer>[] list = new Queue[26];
+        for (int i = 0; i < list.length; i++) {
+            list[i] = new LinkedList<>();
+        }
 
-        dfs(0, "");
+        //큐 배열에 데이터 저장
+        for (int i = 0; i < S.length(); i++) {
+            list[(S.charAt(i)-'a')].add(i);
+        }
+
+        int idx = 0;
+        int pos = -1;
+        while(true){
+            int ch = (T.charAt(idx) - 'a');
+
+            while(!list[ch].isEmpty() && pos > list[ch].peek()){
+                list[ch].poll();
+            }
+
+            if(!list[ch].isEmpty()){
+                pos = list[ch].poll();
+            } else {
+                break;
+            }
+
+            idx++;
+
+            if(idx==T.length()){
+                result++;
+                idx = 0;
+                pos = -1;
+            }
+        }
 
         System.out.println(result);
     }
-
-    private static void dfs(int idx, String makeStr) {
-        if(makeStr.length()==T.length()){
-            //String은 객체이기 때문에 equals를 꼭 사용해야합니다.
-            if(T.equals(makeStr)){
-                result++;
-            }
-            return;
-        }
-
-        for (int i = idx; i < S.length(); i++) {
-            if(S.charAt(i)==T.charAt(makeStr.length())){
-                if(!visited[i]){
-                    visited[i] = true;
-                    dfs(i+1, makeStr+S.charAt(i));
-                }
-            }
-        }
-    }
 }
+
+//참고: https://burningfalls.github.io/algorithm/boj-24524/
